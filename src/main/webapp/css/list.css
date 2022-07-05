@@ -1,0 +1,6 @@
+@charset "UTF-8";
+
+.dataRow:hover { 
+	background-color: #eee;
+	cursor: pointer;
+}

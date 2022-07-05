@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.1//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.myweb.message.mapper.MessageMapper">
+	
+	<!-- 1. 메세지 리스트 -->
+	<select id="list" resultType="com.myweb.message.vo.MessageVO">
+		select rnum, no, sender, senderName, to_char(sendDate, 'yyyy.mm.dd') sendDate, accepter, accepterName, to_char(acceptDate, 'yyyy.mm.dd') acceptDate 
+		from(
+			select rownum rnum, no, sender, senderName, sendDate, accepter, accepterName, acceptDate
+			from(
+				select m.no, m.sender, sm.name senderName, m.sendDate, m.accepter, am.name accepterName, m.acceptDate
+				from message m, member sm, member am
+				<include refid="getCondition"> <property name="alias" value="m."/></include>
+				and (m.sender = sm.id and m.accepter = am.id)
+				order by no desc
+			)
+		)
+		where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	<!-- 1-1. 메세지 리스트의 페이지 처리를 위한 전체 데이터 갯수 -->
+	<select id="getTotalRow" resultType="java.lang.Long">
+		select count(*) from message
+		<include refid="getCondition"><property name="alias" value=""/></include>
+	</select>
+	
+	<!-- 1-2. 메세지 조건 처리 -->
+	<sql id="getCondition" >
+		<if test="acceptMode != null and acceptMode != ''.toString">
+			where(
+				<if test="acceptMode == 1">
+					${alias}accepter = #{accepter} or ${alias}allUser = 1
+				</if>
+				<if test="acceptMode == 2">
+					${alias}sender = #{accepter} or ${alias}allUser = 1
+				</if>
+				<if test="acceptMode == 3">
+					${alias}sender = #{accepter} or ${alias}accepter = #{accepter} or ${alias}allUser = 1
+				</if>
+				<if test="acceptMode == 4">
+					(${alias}accepter = #{accepter} or ${alias}allUser = 1) and acceptDate is null 
+				</if>
+			)
+		</if>
+	</sql>
+	
+	<select id="view" resultType="com.myweb.message.vo.MessageVO">
+		select m.no, m.content, m.sender, sm.name senderName, m.sendDate, m.accepter, am.name accepterName, m.acceptDate
+		from message m, member sm, member am
+		where (m.no = #{no})
+		and (m.sender = sm.id and m.accepter = am.id)
+	</select>	
+	
+	<update id="setReaded">
+		update message set acceptDate = sysdate 
+		where no = #{no} and acceptDate is null and accepter = #{accepter}
+	</update>
+	
+	<insert id="write">
+		insert into message(no, content, sender, accepter) 
+		values(message_seq.nextval, #{content}, #{sender}, #{accepter})
+	</insert>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
