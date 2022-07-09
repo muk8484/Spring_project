@@ -42,7 +42,7 @@ public class PartnerController {
 		String id = LoginVO.getId(request);
 		model.addAttribute("vo", service.writeForm(id));
 		return MODULE + "/writeForm";
-	}
+	} 
 	
 	// 2. 파트너 가입신청 처리
 	@PostMapping("/write.do")
