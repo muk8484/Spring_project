@@ -44,7 +44,7 @@ public class PartnerController {
 		return MODULE + "/writeForm";
 	}
 	
-	// 2. 파트너 가입처리
+	// 2. 파트너 가입신청 처리
 	@PostMapping("/write.do")
 	public String write(partnerVO vo, Model model, RedirectAttributes rttr) throws Exception { 
 		
@@ -52,7 +52,7 @@ public class PartnerController {
 		
 		// DB에 데이터 쓰기
 		service.write(vo);
-		rttr.addFlashAttribute("msg", "파트너 가입 완료!!");
+		rttr.addFlashAttribute("msg", "파트너 신청 완료!!");
 		
 		return "redirect:/";
 	}
