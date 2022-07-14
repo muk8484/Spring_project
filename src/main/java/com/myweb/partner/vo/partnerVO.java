@@ -1,5 +1,7 @@
 package com.myweb.partner.vo;
 
+import com.myweb.member.vo.MemberVO;
+
 import lombok.Data;
 
 @Data
