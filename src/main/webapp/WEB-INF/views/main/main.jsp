@@ -120,18 +120,30 @@
 						<c:when test="${imageList ne null}">
 						  	<c:forEach items="${imageList }" var="vo" varStatus="vs">
 							<!-- 하나의 이미지 -->
-							  <div class="col-md-3">
-							    <div class="thumbnail dataRow" data-module="image">
-							        <img src="${vo.fileName }" alt="${vo.title }" style="width:100%">
-							        <div class="caption">
-							          <p>[<span class="no">${vo.no}</span>] ${vo.title }</p>
-							        </div>
-							    </div>
-							  </div>
+								<div class="card-deck col-md-3 dataRow" data-module="image">
+									<div class="card" *ngFor="let item of cards">
+										<div class="embed-responsive embed-responsive-4by3">
+											<img src="${vo.fileName }"
+												class="card-img-top embed-responsive-item" alt="tree">
+										</div>
+										<div class="card-body">
+											<%-- <h5 class="card-title">${vo.title }</h5> --%>
+											<h5 class="card-subtitle">
+												<span class="no">${vo.no }</span> ${vo.title }
+											</h5>
+											<p class="card-text mt-3">${vo.content }</p>
+											<div>${vo.name }(${vo.id })
+												<span class="pull-right"> 
+													<fmt:formatDate value="${vo.writeDate }" pattern="yyyy.MM.dd" />
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
 							</c:forEach>
-							</c:when>
+						</c:when>
 							<c:when test="${imageList eq null}">
-								<tr class="dataRow" data-module="board">
+								<tr class="dataRow" data-module="image">
 									<td>등록된 글이 없습니다.</td>
 								</tr>
 							</c:when>
